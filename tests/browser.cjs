@@ -94,6 +94,19 @@ const {chromium}=require('playwright');
   assert.equal(await page.locator('#pauseOverlay').isVisible(),true,'Toolbar pauses the game');
   await page.locator('#resumeButton').click();
   assert.equal(await page.locator('#pauseOverlay').isVisible(),false);
+  // A selected cell illuminates exactly its row and column as a cross,
+  // with a subtler box background and no marks for potential solutions.
+  const crossIndex=40;
+  await page.locator('#board button').nth(crossIndex).click();
+  assert.equal(await page.locator('#board button.row-peer').count(),9,'Nine cross-row cells highlighted');
+  assert.equal(await page.locator('#board button.col-peer').count(),9,'Nine cross-column cells highlighted');
+  assert.equal(await page.locator('#board button.box-peer').count(),9,'Three by three block highlighted');
+  const center=page.locator('#board button').nth(crossIndex);
+  assert.ok((await center.getAttribute('class')).includes('selected'),
+    'Cross centered on chosen square');
+  assert.equal(await page.locator('#board button.peer').count(),0,'Old shared peer style removed');
+  assert.equal(await page.locator('#board button.candidate-hint').count(),0,
+    'No answer hint cells are added');
   const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('sudokufunny.game.v1')));
   const firstEmpty=before.puzzle.findIndex(v=>v===0);
   assert.ok(firstEmpty>=0);
