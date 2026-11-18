@@ -83,11 +83,6 @@
   const el=$("toast");el.textContent=message;el.hidden=false;
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,2400);
  }
- function conflict(a,b){
-  if(a===b)return false;
-  const r=Math.floor(a/9),c=a%9,rr=Math.floor(b/9),cc=b%9;
-  return r===rr||c===cc||(Math.floor(r/3)===Math.floor(rr/3)&&Math.floor(c/3)===Math.floor(cc/3));
- }
  function makeCells(){
   const board=$("board");
   const frag=document.createDocumentFragment();
@@ -135,12 +130,19 @@
     "Ο αριθμός "+digit+" ολοκληρώθηκε":"Αριθμός "+digit);
   }
   const selectedValue=state.values[selected];
+  const selectedRow=Math.floor(selected/9),selectedCol=selected%9;
+  const selectedBlockRow=Math.floor(selectedRow/3),selectedBlockCol=Math.floor(selectedCol/3);
   for(let i=0;i<81;i++){
    const cell=boardButtons[i],value=state.values[i],isFixed=!!state.puzzle[i];
+   const row=Math.floor(i/9),col=i%9;
    const isSelected=selected===i;
-   const isPeer=conflict(i,selected),isSame=value&&selectedValue===value;
+   const sameRow=row===selectedRow,sameCol=col===selectedCol;
+   const sameBox=Math.floor(row/3)===selectedBlockRow&&Math.floor(col/3)===selectedBlockCol;
+   const isSame=!!value&&!!selectedValue&&selectedValue===value;
    const wrong=!!(settings.showErrors&&value&&!isFixed&&value!==state.solution[i]);
-   cell.className="sudoku-cell"+(isFixed?" given":"")+(isPeer?" peer":"")+
+   // Orientation only: no candidate calculation or use of the solution for highlights.
+   cell.className="sudoku-cell"+(isFixed?" given":"")+
+     (sameBox?" box-peer":"")+(sameRow?" row-peer":"")+(sameCol?" col-peer":"")+
      (isSame?" same":"")+(isSelected?" selected":"")+(wrong?" wrong":"");
    cell.replaceChildren();
    if(value){cell.textContent=String(value)}
