@@ -148,7 +148,7 @@ const {chromium}=require('playwright');
   await deskPage.goto(url,{waitUntil:'domcontentloaded'});
   const deskBoard=await deskPage.locator('.board-wrap').boundingBox();
   const deskStatus=await deskPage.locator('.status-strip').boundingBox();
-  assert.ok(deskBoard&&deskBoard.width>=570,
+  assert.ok(deskBoard&&deskBoard.width>=730,
    'Sudoku board grows to desktop size: '+JSON.stringify(deskBoard));
   assert.ok(deskStatus&&deskStatus.x>=deskBoard.x+deskBoard.width+15,
    'Desktop controls sit to the right of the board');
@@ -167,6 +167,27 @@ const {chromium}=require('playwright');
   await deskPage.locator('#board button').nth(40).click();
   assert.equal(await deskPage.locator('.sudoku-cell.row-peer').count(),9,
    'Desktop selection cross stays interactive');
+  await deskPage.setViewportSize({width:1366,height:768});
+  const laptopBoard=await deskPage.locator('.board-wrap').boundingBox();
+  const laptopFit=await deskPage.evaluate(()=>({
+   scroll:document.documentElement.scrollHeight,
+   view:document.documentElement.clientHeight,
+   totalWidth:document.documentElement.scrollWidth,
+   viewportWidth:document.documentElement.clientWidth
+  }));
+  assert.ok(laptopBoard&&laptopBoard.width>=630,
+   'Laptop board must be visibly bigger than the old 480px mobile-width board: '+JSON.stringify(laptopBoard));
+  assert.ok(laptopFit.scroll<=laptopFit.view+2&&laptopFit.totalWidth<=laptopFit.viewportWidth+2,
+   'Desktop game must fit a 1366x768 laptop without scrolling: '+JSON.stringify(laptopFit));
+  await deskPage.setViewportSize({width:1920,height:1080});
+  const wideBoard=await deskPage.locator('.board-wrap').boundingBox();
+  assert.ok(wideBoard&&wideBoard.width>=740,
+   'Large PC should use almost the full 760px board: '+JSON.stringify(wideBoard));
+  console.log('BOARD SIZES '+JSON.stringify({
+   desktop:Math.round(deskBoard.width),
+   laptop:Math.round(laptopBoard.width),
+   wide:Math.round(wideBoard.width)
+  }));
   await desktop.close();
   console.log('PASS Sudoku desktop Chromium: expanded board, side controls, 3×3 keypad, no overflow, selection cross');
  }finally{
