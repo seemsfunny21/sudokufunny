@@ -110,7 +110,7 @@ input[type=radio],input[type=checkbox]{accent-color:#49a9ff;width:17px;height:17
 
 /* Native browser fullscreen: maximize the play surface and hide the banner.
    The game iframe may enter fullscreen independently of the Applications tabs. */
-.fullscreen-row{display:none}
+@media (max-width:959px) {.fullscreen-row{display:none}}
 @media (min-width:960px) {
  html:fullscreen,html:fullscreen body{background:#061326}
  html:fullscreen .app-shell{
