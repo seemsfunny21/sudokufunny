@@ -142,6 +142,33 @@ const {chromium}=require('playwright');
   assert.deepEqual(after.puzzle,next.puzzle,'New puzzle survives reload unchanged');
   console.log('PASS Sudoku mobile Chromium: 81 cells, aligned banner, saved moves, timer pause on app switch, difficulty settings, new puzzle persistence');
   await context.close();
+  const desktop=await browser.newContext({viewport:{width:1366,height:900},
+   locale:'el-GR',timezoneId:'Europe/Athens',serviceWorkers:'allow'});
+  const deskPage=await desktop.newPage();
+  await deskPage.goto(url,{waitUntil:'domcontentloaded'});
+  const deskBoard=await deskPage.locator('.board-wrap').boundingBox();
+  const deskStatus=await deskPage.locator('.status-strip').boundingBox();
+  assert.ok(deskBoard&&deskBoard.width>=570,
+   'Sudoku board grows to desktop size: '+JSON.stringify(deskBoard));
+  assert.ok(deskStatus&&deskStatus.x>=deskBoard.x+deskBoard.width+15,
+   'Desktop controls sit to the right of the board');
+  assert.equal(await deskPage.locator('#board button').count(),81);
+  const digits=await Promise.all(['1','2','4'].map(d=>
+   deskPage.locator('#numberPad [data-number="'+d+'"]').boundingBox()));
+  assert.ok(digits[0].x+25<digits[1].x&&Math.abs(digits[0].x-digits[2].x)<2,
+   'Desktop keypad forms an accessible 3×3 matrix');
+  const deskFit=await deskPage.evaluate(()=>({
+   width:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,
+   height:document.documentElement.scrollHeight,viewHeight:document.documentElement.clientHeight
+  }));
+  assert.ok(deskFit.width<=deskFit.viewport+2&&deskFit.height<=deskFit.viewHeight+2,
+   'Desktop Sudoku must fit without scrolling: '+JSON.stringify(deskFit));
+  await deskPage.locator('#resumeButton').click();
+  await deskPage.locator('#board button').nth(40).click();
+  assert.equal(await deskPage.locator('.sudoku-cell.row-peer').count(),9,
+   'Desktop selection cross stays interactive');
+  await desktop.close();
+  console.log('PASS Sudoku desktop Chromium: expanded board, side controls, 3×3 keypad, no overflow, selection cross');
  }finally{
   await browser.close();
   await new Promise(resolve=>server.close(resolve));
