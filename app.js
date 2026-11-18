@@ -4,17 +4,43 @@
  if(!Engine)throw Error("Sudoku engine missing");
  const GAME_KEY="sudokufunny.game.v1";
  const SETTINGS_KEY="sudokufunny.settings.v1";
+ const STATS_KEY="sudokufunny.stats.v1";
  const $=id=>document.getElementById(id);
  const LEVELS=Engine.LEVELS;
  const DEFAULT={difficulty:"medium",showErrors:true};
  let settings=readSettings();
  let state=readGame(),runStarted=null,appActive=true,selected=40,notesMode=false;
- let saveOK=true,toastTimer=null;
+ let saveOK=true,statsSaveFailed=false,toastTimer=null;
  const boardButtons=[];
  function storageGet(key){try{return localStorage.getItem(key)}catch{return null}}
  function storageSet(key,value){
   try{localStorage.setItem(key,JSON.stringify(value));saveOK=true;return true}
   catch{saveOK=false;return false}
+ }
+ function safeCounter(n){return Number.isSafeInteger(n)&&n>=0&&n<=999999999?n:0}
+ function readStats(){
+  const raw=(()=>{try{return JSON.parse(storageGet(STATS_KEY)||"null")}catch{return null}})();
+  const byLevel={};
+  for(const level of Object.keys(LEVELS)){
+   byLevel[level]={wins:safeCounter(raw?.byLevel?.[level]?.wins),
+    losses:safeCounter(raw?.byLevel?.[level]?.losses)};
+  }
+  return {wins:safeCounter(raw?.wins),losses:safeCounter(raw?.losses),byLevel};
+ }
+ let stats=readStats();
+ function updateStatsView(){
+  $("statsWins").textContent=String(stats.wins);
+  $("statsLosses").textContent=String(stats.losses);
+  const labels={easy:"Εύκολο",medium:"Μέτριο",hard:"Δύσκολο",expert:"Ειδικός"};
+  $("statsDetail").textContent="Ανά επίπεδο (λυμένα / εγκαταλείψεις): "+
+   Object.keys(LEVELS).map(level=>labels[level]+" "+stats.byLevel[level].wins+
+    "/"+stats.byLevel[level].losses).join(" · ")+". Η παύση δεν μετρά ως ήττα.";
+ }
+ function recordResult(kind){
+  if(stats[kind]>=999999999||stats.byLevel[state.level][kind]>=999999999)return;
+  stats[kind]++;stats.byLevel[state.level][kind]++;
+  statsSaveFailed=!storageSet(STATS_KEY,stats);
+  updateStatsView();
  }
  function readSettings(){
   try{
@@ -61,8 +87,8 @@
   const snapshot={...state,elapsedMs:elapsed(),paused:state.paused};
   storageSet(GAME_KEY,snapshot);
   const notice=$("saveNote");
-  notice.hidden=saveOK;
-  if(!saveOK)notice.textContent="⚠️ Η αποθήκευση αποκλείστηκε. Μην κλείσεις την εφαρμογή πριν ελευθερώσεις χώρο.";
+  notice.hidden=saveOK&&!statsSaveFailed;
+  if(!saveOK||statsSaveFailed)notice.textContent="⚠️ Η αποθήκευση παιχνιδιού ή στατιστικών απέτυχε. Ελευθέρωσε χώρο πριν κλείσεις την εφαρμογή.";
  }
  function formatTime(ms){
   const secs=Math.floor(ms/1000),h=Math.floor(secs/3600),m=Math.floor(secs%3600/60),s=secs%60;
@@ -181,6 +207,7 @@
   }
   if(completed()){
    state.elapsedMs=elapsed();runStarted=null;state.paused=true;state.completed=true;
+   recordResult("wins");
    toast("🎉 Το ολοκλήρωσες!");
   }
   save();render();
@@ -200,6 +227,9 @@
  }
  function newGame(){
   if(!state.completed&&!window.confirm("Να ξεκινήσει νέα παρτίδα; Η τρέχουσα θα αντικατασταθεί."))return;
+  // A paused game is still active. Count an abandonment only when the player
+  // explicitly confirms replacing a puzzle where they have made moves.
+  if(!state.completed&&state.history.length>0)recordResult("losses");
   state=createGame(settings.difficulty);runStarted=null;
   selected=state.puzzle.findIndex(x=>x===0);
   notesMode=false;save();render();
@@ -232,7 +262,7 @@ async function toggleFullscreen(){
  }
  refreshFullscreenButton();
 }
- makeCells();render();save();
+ makeCells();updateStatsView();render();save();
  $("numberPad").addEventListener("click",event=>{
   const button=event.target.closest("[data-number]");
   if(button)enterNumber(Number(button.dataset.number));
@@ -284,6 +314,7 @@ refreshFullscreenButton();
  window.addEventListener("pagehide",pauseGame);
  window.addEventListener("blur",()=>{if(!$("settingsDialog").open)pauseGame()});
  window.addEventListener("storage",event=>{
+  if(event.key===STATS_KEY){stats=readStats();statsSaveFailed=false;updateStatsView();return}
   if(event.key!==GAME_KEY||!event.newValue)return;
   const latest=readGame();
   if(!latest)return;
