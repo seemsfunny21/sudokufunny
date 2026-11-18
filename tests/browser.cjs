@@ -40,6 +40,39 @@ const {chromium}=require('playwright');
   assert.ok(fitsScreen.doc<=fitsScreen.view+2,
     'Sudoku must fit 393×844 without page scrolling: '+JSON.stringify(fitsScreen));
   assert.equal(await page.locator('#pauseOverlay').isVisible(),true,'Reload starts paused');
+  // Finish all nine correct copies of a digit. The pad key disappears, but the
+  // remaining keys retain their positions. Undo restores the key immediately.
+  const lastDigitOne=await page.evaluate(()=>{
+    const key='sudokufunny.game.v1';
+    const game=JSON.parse(localStorage.getItem(key));
+    const positions=game.solution.flatMap((value,i)=>value===1?[i]:[]);
+    const missing=positions.filter(i=>!game.puzzle[i]);
+    if(!missing.length)throw Error('Expected a fillable position for digit 1');
+    const last=missing.at(-1);
+    for(const i of positions)if(i!==last)game.values[i]=1;
+    game.history=[];
+    localStorage.setItem(key,JSON.stringify(game));
+    return last;
+  });
+  await page.reload({waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),true,
+    'Digit stays available until nine correct copies are filled');
+  const otherKey=await page.locator('#numberPad [data-number="2"]').boundingBox();
+  await page.locator('#pauseButton').click();
+  await page.locator('#board button').nth(lastDigitOne).click();
+  await page.locator('#numberPad [data-number="1"]').click();
+  assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),false,
+    'Completed digit disappears');
+  assert.equal(await page.locator('#numberPad [data-number="1"]').isDisabled(),true,
+    'Completed digit cannot be selected');
+  const otherKeyAfter=await page.locator('#numberPad [data-number="2"]').boundingBox();
+  assert.equal(otherKeyAfter.x,otherKey.x,'Remaining keypad digits do not shift');
+  await page.locator('#undoButton').click();
+  assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),true,
+    'Undo makes the digit reappear');
+  await page.reload({waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),true,
+    'Remaining digits are recalculated after reopening the game');
   assert.equal(await page.locator('input[name=difficulty]').count(),4);
   assert.equal(await page.locator('.status-strip').locator(':scope > *').count(),4,
     'Time, progress, pause and settings share one compact toolbar');
