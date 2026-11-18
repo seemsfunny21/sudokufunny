@@ -16,8 +16,12 @@ assert.ok(!html.includes('class="game-heading"'),'No second page title wastes pu
 assert.ok(html.includes('id="pauseButton" class="status-action"'),'Pause is in compact status row');
 assert.ok(html.includes('id="settingsButton" class="status-action"'),'Settings is in compact status row');
 assert.ok(fsRead('style.css').includes('width:min(calc(100% + 12px),480px)'),'Board can take available extra width');
-assert.ok(html.includes('style.css?v=4')&&sw.includes('style.css?v=4')&&
- html.includes('app.js?v=4')&&sw.includes('app.js?v=4'),'Latest app and CSS cached consistently');
+assert.ok(html.includes('style.css?v=5')&&sw.includes('style.css?v=5')&&
+ html.includes('app.js?v=5')&&sw.includes('app.js?v=5'),'Latest app and CSS cached consistently');
+assert.ok(js.includes('sameRow?" row-peer"')&&js.includes('sameCol?" col-peer"')&&
+ js.includes('sameBox?" box-peer"'),'Row, column, and box highlights centered on selected cell');
+assert.ok(!js.includes('isPeer=conflict'),'No legacy single-color peer highlight');
+assert.ok(!js.includes('Engine.candidates('),'No solution/candidate hints in highlights');
 assert.ok(js.includes('correctCounts[value]++')&&js.includes('correctCounts[digit]===9'),
  'Digit completion counts only correct placements');
 assert.ok(fsRead('style.css').includes('.number-pad button.is-complete{visibility:hidden'),
