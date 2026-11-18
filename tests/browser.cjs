@@ -31,6 +31,14 @@ const {chromium}=require('playwright');
   const page=await context.newPage();
   await page.goto(url,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('#board button.sudoku-cell').count(),81);
+  assert.equal(await page.locator('#saveNote').isVisible(),false,'Autosave text stays hidden on successful save');
+  const fitsScreen=await page.evaluate(()=>({
+    doc:document.documentElement.scrollHeight,
+    view:document.documentElement.clientHeight,
+    body:document.body.scrollHeight
+  }));
+  assert.ok(fitsScreen.doc<=fitsScreen.view+2,
+    'Sudoku must fit 393×844 without page scrolling: '+JSON.stringify(fitsScreen));
   assert.equal(await page.locator('#pauseOverlay').isVisible(),true,'Reload starts paused');
   assert.equal(await page.locator('input[name=difficulty]').count(),4);
   assert.equal(await page.locator('.status-strip').locator(':scope > *').count(),4,
