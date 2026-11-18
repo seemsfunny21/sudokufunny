@@ -67,21 +67,21 @@ input[type=radio],input[type=checkbox]{accent-color:#49a9ff;width:17px;height:17
 @media(max-width:360px){.app-shell{padding-left:10px;padding-right:10px}.number-pad{--digit-gap:3px;min-height:40px}.number-pad button{min-height:40px;border-radius:7px}.status-strip{gap:5px}.status-action{font-size:10px}.tool-row{gap:6px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
-/* Desktop layout: a large board on the left, a comfortable control desk on the right.
+/* Full HD desktop layout: a large board on the left, a comfortable control desk on the right.
    Phones and tablets retain the existing compact single-column layout. */
 @media (min-width:960px) {
- .app-shell{max-width:1300px;padding:10px 18px 12px}
- .hero{height:clamp(54px,8dvh,76px);margin-bottom:10px}
+ .app-shell{max-width:1540px;padding:10px 18px 12px}
+ .hero{height:clamp(48px,6dvh,64px);margin-bottom:8px}
  .game-panel{
-  max-width:1200px;display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(270px,320px);
-  grid-template-rows:repeat(5,min-content);
+  max-width:1390px;display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(300px,360px);
+  grid-template-rows:repeat(6,min-content);
   column-gap:24px;row-gap:12px;align-items:start;text-align:center
  }
  .board-wrap{
-  grid-column:1;grid-row:1 / span 5;
-  justify-self:end;align-self:start;left:auto;transform:none;
-  width:min(100%,760px,calc(100dvh - 108px))
+  grid-column:1;grid-row:1 / span 6;
+  justify-self:center;align-self:start;left:auto;transform:none;
+  width:min(100%,960px,calc(100dvh - 100px))
  }
  .status-strip{grid-column:2;grid-row:1;gap:7px;margin:0}
  .status-block,.status-action{min-height:66px}
@@ -100,7 +100,24 @@ input[type=radio],input[type=checkbox]{accent-color:#49a9ff;width:17px;height:17
  .tool-btn{min-height:64px;font-size:12px}
  .secondary-row{grid-column:2;grid-row:4;margin:0}
  .secondary-row .btn{min-height:53px;font-size:15px}
- .save-note{grid-column:2;grid-row:5}
- .sudoku-cell{font-size:clamp(24px,2.1vw,36px)}
- .sudoku-cell .cell-notes{font-size:clamp(10px,1vw,14px)}
+ .fullscreen-row{grid-column:2;grid-row:5;display:block}
+ .fullscreen-btn{width:100%;min-height:52px;background:linear-gradient(145deg,#143b65,#0b294a);border-color:#86c8ff8c;font-size:14px}
+ .fullscreen-btn:hover{background:linear-gradient(145deg,#20598e,#14406d)}
+ .save-note{grid-column:2;grid-row:6}
+ .sudoku-cell{font-size:clamp(24px,2.2vw,40px)}
+ .sudoku-cell .cell-notes{font-size:clamp(10px,1.1vw,16px)}
+}
+
+/* Native browser fullscreen: maximize the play surface and hide the banner.
+   The game iframe may enter fullscreen independently of the Applications tabs. */
+.fullscreen-row{display:none}
+@media (min-width:960px) {
+ html:fullscreen,html:fullscreen body{background:#061326}
+ html:fullscreen .app-shell{
+  max-width:1650px;min-height:100dvh;padding:14px 22px;
+  display:flex;align-items:center;justify-content:center
+ }
+ html:fullscreen .hero{display:none}
+ html:fullscreen .game-panel{max-width:1490px;width:100%;margin:0 auto}
+ html:fullscreen .board-wrap{width:min(100%,1000px,calc(100dvh - 32px))}
 }
