@@ -38,8 +38,8 @@ button:disabled{cursor:not-allowed;opacity:.5}
 .btn{border:1px solid rgba(119,182,255,.48);border-radius:12px;min-height:43px;padding:8px 12px;font-size:13px;font-weight:800;color:#fff;background:#205189}
 .main-btn{background:linear-gradient(145deg,#2f9aff,#125fcb);border-color:#81ceff;box-shadow:0 6px 19px rgba(14,104,220,.25)}
 .subtle-btn{background:#16365e}
-.number-pad{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;margin:12px 0 10px}
-.number-pad button{min-width:0;min-height:43px;border:1px solid rgba(104,173,250,.45);border-radius:10px;background:linear-gradient(150deg,#1b497d,#10325a);color:#f7fbff;font-weight:850;font-size:clamp(17px,4.8vw,23px)}
+.number-pad{--digit-gap:5px;display:flex;justify-content:center;align-items:stretch;gap:var(--digit-gap);min-height:43px;margin:12px 0 10px}
+.number-pad button{flex:0 0 calc((100% - 8 * var(--digit-gap))/9);min-width:0;min-height:43px;border:1px solid rgba(104,173,250,.45);border-radius:10px;background:linear-gradient(150deg,#1b497d,#10325a);color:#f7fbff;font-weight:850;font-size:clamp(17px,4.8vw,23px)}
 .number-pad button.is-complete{visibility:hidden;pointer-events:none}
 .number-pad button:active,.btn:active{filter:brightness(1.25)}
 .tool-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
@@ -60,5 +60,5 @@ input[type=radio],input[type=checkbox]{accent-color:#49a9ff;width:17px;height:17
 .settings-explanation{font-size:12px;line-height:1.6;color:var(--sub)}
 .save-settings{width:100%;margin-top:12px}
 .toast{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:20;max-width:calc(100% - 24px);padding:11px 15px;border-radius:12px;border:1px solid #82caff;background:#153962;color:#fff;font-size:12px;font-weight:700;box-shadow:0 10px 25px #0008}
-@media(max-width:360px){.app-shell{padding-left:10px;padding-right:10px}.number-pad{gap:3px}.number-pad button{min-height:40px;border-radius:7px}.status-strip{gap:5px}.status-action{font-size:10px}.tool-row{gap:6px}}
+@media(max-width:360px){.app-shell{padding-left:10px;padding-right:10px}.number-pad{--digit-gap:3px;min-height:40px}.number-pad button{min-height:40px;border-radius:7px}.status-strip{gap:5px}.status-action{font-size:10px}.tool-row{gap:6px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
