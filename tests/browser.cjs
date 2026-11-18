@@ -181,8 +181,33 @@ const {chromium}=require('playwright');
    'Desktop game must fit a 1366x768 laptop without scrolling: '+JSON.stringify(laptopFit));
   await deskPage.setViewportSize({width:1920,height:1080});
   const wideBoard=await deskPage.locator('.board-wrap').boundingBox();
-  assert.ok(wideBoard&&wideBoard.width>=740,
-   'Large PC should use almost the full 760px board: '+JSON.stringify(wideBoard));
+  assert.ok(wideBoard&&wideBoard.width>=940,
+   'Full HD 1920×1080 board should be about 960px: '+JSON.stringify(wideBoard));
+  const fullscreenButton=deskPage.locator('#fullscreenButton');
+  assert.equal(await fullscreenButton.isVisible(),true,'Full screen button is visible on desktop');
+  assert.equal(await fullscreenButton.getAttribute('aria-pressed'),'false');
+  await fullscreenButton.click();
+  await deskPage.waitForFunction(()=>Boolean(document.fullscreenElement),null,{timeout:7000});
+  const fullBoard=await deskPage.locator('.board-wrap').boundingBox();
+  assert.ok(fullBoard&&fullBoard.width>=980,
+   'Native fullscreen board should be about 1000px: '+JSON.stringify(fullBoard));
+  assert.equal(await deskPage.locator('.hero').isVisible(),false,
+   'Fullscreen removes the decorative banner to free up space');
+  assert.equal(await fullscreenButton.getAttribute('aria-pressed'),'true');
+  assert.match(await deskPage.locator('#fullscreenLabel').textContent(),/Έξοδος/);
+  const fullscreenFit=await deskPage.evaluate(()=>({
+    width:document.documentElement.scrollWidth,viewWidth:document.documentElement.clientWidth,
+    height:document.documentElement.scrollHeight,viewHeight:document.documentElement.clientHeight
+  }));
+  assert.ok(fullscreenFit.width<=fullscreenFit.viewWidth+2&&fullscreenFit.height<=fullscreenFit.viewHeight+2,
+   'True fullscreen stays within screen without scrolling: '+JSON.stringify(fullscreenFit));
+  await fullscreenButton.click();
+  await deskPage.waitForFunction(()=>!document.fullscreenElement,null,{timeout:7000});
+  assert.equal(await fullscreenButton.getAttribute('aria-pressed'),'false');
+  console.log('FULL HD BOARD SIZES '+JSON.stringify({
+    desktop:Math.round(wideBoard.width),
+    fullscreen:Math.round(fullBoard.width)
+  }));
   console.log('BOARD SIZES '+JSON.stringify({
    desktop:Math.round(deskBoard.width),
    laptop:Math.round(laptopBoard.width),
