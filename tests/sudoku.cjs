@@ -16,8 +16,12 @@ assert.ok(!html.includes('class="game-heading"'),'No second page title wastes pu
 assert.ok(html.includes('id="pauseButton" class="status-action"'),'Pause is in compact status row');
 assert.ok(html.includes('id="settingsButton" class="status-action"'),'Settings is in compact status row');
 assert.ok(fsRead('style.css').includes('width:min(calc(100% + 12px),480px)'),'Board can take available extra width');
-assert.ok(html.includes('style.css?v=3')&&sw.includes('style.css?v=3')&&
- html.includes('app.js?v=3')&&sw.includes('app.js?v=3'),'Latest app and CSS cached consistently');
+assert.ok(html.includes('style.css?v=4')&&sw.includes('style.css?v=4')&&
+ html.includes('app.js?v=4')&&sw.includes('app.js?v=4'),'Latest app and CSS cached consistently');
+assert.ok(js.includes('correctCounts[value]++')&&js.includes('correctCounts[digit]===9'),
+ 'Digit completion counts only correct placements');
+assert.ok(fsRead('style.css').includes('.number-pad button.is-complete{visibility:hidden'),
+ 'Completed digits disappear without reflowing other keys');
 assert.ok(html.includes('id="saveNote" role="alert" hidden'),'Routine autosave status is hidden');
 assert.ok(js.includes('notice.hidden=saveOK'),'Autosave errors remain visible while successful saves are silent');
 assert.ok(js.includes('state.paused=true')&&js.includes('elapsedMs:elapsed()'),'Saved sessions pause and retain elapsed time');
