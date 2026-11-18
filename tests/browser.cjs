@@ -61,8 +61,16 @@ const {chromium}=require('playwright');
   await page.locator('#pauseButton').click();
   await page.locator('#board button').nth(lastDigitOne).click();
   await page.locator('#numberPad [data-number="1"]').click();
+  const completedInfo=await page.evaluate(()=>{
+    const data=JSON.parse(localStorage.getItem('sudokufunny.game.v1'));
+    const count=data.values.filter((v,i)=>v===1&&v===data.solution[i]).length;
+    const btn=document.querySelector('#numberPad [data-number="1"]');
+    return {count,disabled:btn.disabled,css:getComputedStyle(btn).visibility,
+      className:btn.className,selectedValue:data.values[lastDigitOne]};
+  });
+  console.log('Completed digit details:',JSON.stringify(completedInfo));
   assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),false,
-    'Completed digit disappears');
+    'Completed digit disappears: '+JSON.stringify(completedInfo));
   assert.equal(await page.locator('#numberPad [data-number="1"]').isDisabled(),true,
     'Completed digit cannot be selected');
   const otherKeyAfter=await page.locator('#numberPad [data-number="2"]').boundingBox();
