@@ -66,7 +66,7 @@ const {chromium}=require('playwright');
     const count=data.values.filter((v,i)=>v===1&&v===data.solution[i]).length;
     const btn=document.querySelector('#numberPad [data-number="1"]');
     return {count,disabled:btn.disabled,css:getComputedStyle(btn).visibility,
-      className:btn.className,selectedValue:data.values[lastDigitOne]};
+      className:btn.className}};
   });
   console.log('Completed digit details:',JSON.stringify(completedInfo));
   assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),false,
