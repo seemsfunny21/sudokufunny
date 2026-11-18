@@ -11,9 +11,9 @@
   <title>SudokuFunny</title>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
-  <link rel="stylesheet" href="./style.css?v=1">
+  <link rel="stylesheet" href="./style.css?v=2">
   <script src="./sudoku-engine.js?v=1" defer></script>
-  <script src="./app.js?v=1" defer></script>
+  <script src="./app.js?v=2" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -22,15 +22,18 @@
     </header>
 
     <main class="game-panel">
-      <div class="game-heading">
-        <div><h1>SudokuFunny</h1><p id="difficultyLabel">Μέτριο επίπεδο</p></div>
-        <button id="settingsButton" class="utility-btn" type="button" aria-label="Ρυθμίσεις" title="Ρυθμίσεις">⚙️ <span>Ρυθμίσεις</span></button>
-      </div>
-      <div class="status-strip">
+      <h1 class="sr-only">SudokuFunny — Sudoku 9×9</h1>
+      <div class="status-strip" aria-label="Χρόνος, συμπληρωμένα κελιά και ενέργειες">
         <span class="status-block"><span class="status-caption">Χρόνος</span><strong id="timer" aria-live="off">00:00</strong></span>
-        <span class="status-block"><span class="status-caption">Πρόοδος</span><strong id="progress">0/81</strong></span>
-        <span id="gameStatus" class="game-status" role="status">Ετοιμότητα</span>
+        <span class="status-block"><span class="status-caption">Συμπλ.</span><strong id="progress">0/81</strong></span>
+        <button id="pauseButton" class="status-action" type="button" aria-label="Παύση παιχνιδιού">
+          <span class="action-icon" aria-hidden="true">Ⅱ</span><span id="pauseLabel">Παύση</span>
+        </button>
+        <button id="settingsButton" class="status-action" type="button" aria-label="Ρυθμίσεις" title="Ρυθμίσεις">
+          <span class="action-icon" aria-hidden="true">⚙</span><span>Ρυθμίσεις</span>
+        </button>
       </div>
+      <span id="gameStatus" class="sr-only" role="status">Σε παύση</span>
       <div class="board-wrap">
         <div id="board" class="sudoku-board" role="grid" aria-label="Πίνακας Sudoku 9 επί 9"></div>
         <div id="pauseOverlay" class="pause-overlay" hidden>
@@ -51,7 +54,6 @@
         <button type="button" class="btn tool-btn" id="eraseButton"><span>⌫</span> Σβήσιμο</button>
       </div>
       <div class="secondary-row">
-        <button type="button" class="btn subtle-btn" id="pauseButton">Ⅱ Παύση</button>
         <button type="button" class="btn main-btn" id="newButton">＋ Νέο παιχνίδι</button>
       </div>
       <p class="save-note" id="saveNote" role="status">Αυτόματη αποθήκευση στη συσκευή.</p>
