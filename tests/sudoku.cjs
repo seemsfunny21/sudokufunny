@@ -16,8 +16,9 @@ assert.ok(!html.includes('class="game-heading"'),'No second page title wastes pu
 assert.ok(html.includes('id="pauseButton" class="status-action"'),'Pause is in compact status row');
 assert.ok(html.includes('id="settingsButton" class="status-action"'),'Settings is in compact status row');
 assert.ok(fsRead('style.css').includes('width:min(calc(100% + 12px),480px)'),'Board can take available extra width');
-assert.ok(html.includes('style.css?v=5')&&sw.includes('style.css?v=5')&&
+assert.ok(html.includes('style.css?v=6')&&sw.includes('style.css?v=6')&&
  html.includes('app.js?v=5')&&sw.includes('app.js?v=5'),'Latest app and CSS cached consistently');
+assert.ok(fsRead('style.css').includes('@media (min-width:960px)'),'Desktop-only layout preserves phone view');
 assert.ok(js.includes('sameRow?" row-peer"')&&js.includes('sameCol?" col-peer"')&&
  js.includes('sameBox?" box-peer"'),'Row, column, and box highlights centered on selected cell');
 assert.ok(!js.includes('isPeer=conflict'),'No legacy single-color peer highlight');
