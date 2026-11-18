@@ -252,4 +252,7 @@
   render();toast("Η παρτίδα ενημερώθηκε από άλλη καρτέλα.");
  });
  setInterval(()=>{if(!state.paused){$("timer").textContent=formatTime(elapsed());save()}},5000);
+ if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"}).catch(()=>{}),{once:true});
+ }
 })();
