@@ -12,6 +12,12 @@ const levels=Object.keys(Engine.LEVELS);
 assert.deepEqual(levels,['easy','medium','hard','expert']);
 assert.equal((html.match(/type="radio" name="difficulty"/g)||[]).length,4);
 assert.ok(js.includes('pagehide')&&js.includes('visibilitychange')&&js.includes('sudokufunny:visibility'),'Pause when hidden or another Applications tab selected');
+assert.ok(!html.includes('class="game-heading"'),'No second page title wastes puzzle space');
+assert.ok(html.includes('id="pauseButton" class="status-action"'),'Pause is in compact status row');
+assert.ok(html.includes('id="settingsButton" class="status-action"'),'Settings is in compact status row');
+assert.ok(fsRead('style.css').includes('width:min(calc(100% + 12px),480px)'),'Board can take available extra width');
+assert.ok(html.includes('style.css?v=2')&&sw.includes('style.css?v=2')&&
+ html.includes('app.js?v=2')&&sw.includes('app.js?v=2'),'Latest app and CSS cached consistently');
 assert.ok(js.includes('state.paused=true')&&js.includes('elapsedMs:elapsed()'),'Saved sessions pause and retain elapsed time');
 assert.ok(js.includes('window.addEventListener("storage"'),'Synchronize tabs without overwriting saved game');
 assert.ok(js.includes('localStorage.setItem')&&js.includes('sudokufunny.game.v1'),'Persistent local game save');
