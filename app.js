@@ -103,7 +103,6 @@
  }
  function render(){
   const filled=state.values.filter(Boolean).length;
-  $("difficultyLabel").textContent=LEVELS[state.level].label+" επίπεδο";
   $("progress").textContent=filled+"/81";
   $("timer").textContent=formatTime(elapsed());
   $("gameStatus").textContent=state.completed?"Ολοκληρώθηκε!":state.paused?"Σε παύση":"Σε εξέλιξη";
@@ -113,7 +112,9 @@
   $("pauseDescription").textContent=state.completed?
    "Έλυσες σωστά ολόκληρο το Sudoku.":"Το παιχνίδι έχει αποθηκευτεί. Ο χρόνος δεν μετρά.";
   $("resumeButton").textContent=state.completed?"＋ Νέο παιχνίδι":"▶ Συνέχεια";
-  $("pauseButton").textContent=state.paused||state.completed?"▶ Συνέχεια":"Ⅱ Παύση";
+  $("pauseButton").querySelector(".action-icon").textContent=state.paused||state.completed?"▶":"Ⅱ";
+  $("pauseLabel").textContent=state.paused||state.completed?"Συνέχεια":"Παύση";
+  $("pauseButton").setAttribute("aria-label",state.paused||state.completed?"Συνέχεια παιχνιδιού":"Παύση παιχνιδιού");
   $("pauseButton").disabled=state.completed;
   $("notesButton").setAttribute("aria-pressed",String(notesMode));
   $("undoButton").disabled=state.paused||state.completed||!state.history.length;
