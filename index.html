@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071426">
+  <meta name="description" content="SudokuFunny — Sudoku 9×9 με αυτόματη αποθήκευση και παύση.">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SudokuFunny">
+  <title>SudokuFunny</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="stylesheet" href="./style.css?v=1">
+  <script src="./sudoku-engine.js?v=1" defer></script>
+  <script src="./app.js?v=1" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <img class="sudoku-hero-art" src="./hero-banner.svg" width="900" height="300" alt="SudokuFunny — Sudoku με αριθμούς και μπλε φωτισμό" decoding="async">
+    </header>
+
+    <main class="game-panel">
+      <div class="game-heading">
+        <div><h1>SudokuFunny</h1><p id="difficultyLabel">Μέτριο επίπεδο</p></div>
+        <button id="settingsButton" class="utility-btn" type="button" aria-label="Ρυθμίσεις" title="Ρυθμίσεις">⚙️ <span>Ρυθμίσεις</span></button>
+      </div>
+      <div class="status-strip">
+        <span class="status-block"><span class="status-caption">Χρόνος</span><strong id="timer" aria-live="off">00:00</strong></span>
+        <span class="status-block"><span class="status-caption">Πρόοδος</span><strong id="progress">0/81</strong></span>
+        <span id="gameStatus" class="game-status" role="status">Ετοιμότητα</span>
+      </div>
+      <div class="board-wrap">
+        <div id="board" class="sudoku-board" role="grid" aria-label="Πίνακας Sudoku 9 επί 9"></div>
+        <div id="pauseOverlay" class="pause-overlay" hidden>
+          <span aria-hidden="true" class="pause-symbol">Ⅱ</span>
+          <strong id="pauseTitle">Σε παύση</strong>
+          <p id="pauseDescription">Το παιχνίδι αποθηκεύτηκε.</p>
+          <button id="resumeButton" type="button" class="btn main-btn">▶ Συνέχεια</button>
+        </div>
+      </div>
+      <div class="number-pad" id="numberPad" aria-label="Επιλογή αριθμού">
+        <button type="button" data-number="1">1</button><button type="button" data-number="2">2</button><button type="button" data-number="3">3</button>
+        <button type="button" data-number="4">4</button><button type="button" data-number="5">5</button><button type="button" data-number="6">6</button>
+        <button type="button" data-number="7">7</button><button type="button" data-number="8">8</button><button type="button" data-number="9">9</button>
+      </div>
+      <div class="tool-row">
+        <button type="button" class="btn tool-btn" id="undoButton"><span>↶</span> Αναίρεση</button>
+        <button type="button" class="btn tool-btn" id="notesButton" aria-pressed="false"><span>✎</span> Σημειώσεις</button>
+        <button type="button" class="btn tool-btn" id="eraseButton"><span>⌫</span> Σβήσιμο</button>
+      </div>
+      <div class="secondary-row">
+        <button type="button" class="btn subtle-btn" id="pauseButton">Ⅱ Παύση</button>
+        <button type="button" class="btn main-btn" id="newButton">＋ Νέο παιχνίδι</button>
+      </div>
+      <p class="save-note" id="saveNote" role="status">Αυτόματη αποθήκευση στη συσκευή.</p>
+    </main>
+  </div>
+
+  <dialog id="settingsDialog" aria-labelledby="settingsTitle">
+    <form id="settingsForm" method="dialog">
+      <div class="dialog-heading"><h2 id="settingsTitle">Ρυθμίσεις</h2><button id="closeSettings" type="button" class="close-btn" aria-label="Κλείσιμο">✕</button></div>
+      <fieldset>
+        <legend>Δυσκολία νέου παιχνιδιού</legend>
+        <label><input type="radio" name="difficulty" value="easy"><span>Εύκολο</span></label>
+        <label><input type="radio" name="difficulty" value="medium"><span>Μέτριο</span></label>
+        <label><input type="radio" name="difficulty" value="hard"><span>Δύσκολο</span></label>
+        <label><input type="radio" name="difficulty" value="expert"><span>Ειδικός</span></label>
+      </fieldset>
+      <label class="setting-switch"><input id="showErrors" type="checkbox"> <span>Επισήμανση λανθασμένων αριθμών</span></label>
+      <p class="settings-explanation">Η αλλαγή δυσκολίας ισχύει για το <strong>επόμενο παιχνίδι</strong>. Η τρέχουσα παρτίδα δεν διαγράφεται.</p>
+      <button class="btn main-btn save-settings" type="submit">Αποθήκευση ρυθμίσεων</button>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
