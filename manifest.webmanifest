@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "SudokuFunny — Sudoku",
+  "short_name": "SudokuFunny",
+  "description": "Sudoku 9×9 με επίπεδα, χρονομέτρηση, παύση και αυτόματη αποθήκευση.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "lang": "el",
+  "background_color": "#071426",
+  "theme_color": "#071426",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}
