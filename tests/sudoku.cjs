@@ -16,8 +16,10 @@ assert.ok(!html.includes('class="game-heading"'),'No second page title wastes pu
 assert.ok(html.includes('id="pauseButton" class="status-action"'),'Pause is in compact status row');
 assert.ok(html.includes('id="settingsButton" class="status-action"'),'Settings is in compact status row');
 assert.ok(fsRead('style.css').includes('width:min(calc(100% + 12px),480px)'),'Board can take available extra width');
-assert.ok(html.includes('style.css?v=2')&&sw.includes('style.css?v=2')&&
- html.includes('app.js?v=2')&&sw.includes('app.js?v=2'),'Latest app and CSS cached consistently');
+assert.ok(html.includes('style.css?v=3')&&sw.includes('style.css?v=3')&&
+ html.includes('app.js?v=3')&&sw.includes('app.js?v=3'),'Latest app and CSS cached consistently');
+assert.ok(html.includes('id="saveNote" role="alert" hidden'),'Routine autosave status is hidden');
+assert.ok(js.includes('notice.hidden=saveOK'),'Autosave errors remain visible while successful saves are silent');
 assert.ok(js.includes('state.paused=true')&&js.includes('elapsedMs:elapsed()'),'Saved sessions pause and retain elapsed time');
 assert.ok(js.includes('window.addEventListener("storage"'),'Synchronize tabs without overwriting saved game');
 assert.ok(js.includes('localStorage.setItem')&&js.includes('sudokufunny.game.v1'),'Persistent local game save');
