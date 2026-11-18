@@ -104,6 +104,14 @@
  function render(){
   const filled=state.values.filter(Boolean).length;
   $("progress").textContent=filled+"/81";
+  // Nine appearances of each digit (including the initial clues) complete it.
+  // A removed/replaced digit or Undo immediately restores its keypad button.
+  const digitCounts=Array(10).fill(0);
+  for(const value of state.values)if(value>=1&&value<=9)digitCounts[value]++;
+  for(const button of $("numberPad").querySelectorAll("[data-number]")){
+    const digit=Number(button.dataset.number);
+    button.hidden=digitCounts[digit]>=9;
+  }
   $("timer").textContent=formatTime(elapsed());
   $("gameStatus").textContent=state.completed?"Ολοκληρώθηκε!":state.paused?"Σε παύση":"Σε εξέλιξη";
   const overlay=$("pauseOverlay");
