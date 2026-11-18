@@ -66,6 +66,14 @@
   <dialog id="settingsDialog" aria-labelledby="settingsTitle">
     <form id="settingsForm" method="dialog">
       <div class="dialog-heading"><h2 id="settingsTitle">Ρυθμίσεις</h2><button id="closeSettings" type="button" class="close-btn" aria-label="Κλείσιμο">✕</button></div>
+      <section class="stats-panel" aria-labelledby="statsHeading">
+        <h3 id="statsHeading">Στατιστικά Sudoku</h3>
+        <div class="stats-grid">
+          <div class="stats-tile"><span>Λυμένα (νίκες)</span><strong id="statsWins">0</strong></div>
+          <div class="stats-tile"><span>Εγκαταλείψεις</span><strong id="statsLosses">0</strong></div>
+        </div>
+        <p id="statsDetail" class="stats-detail">Οι παρτίδες σε παύση δεν υπολογίζονται ως ήττες.</p>
+      </section>
       <fieldset>
         <legend>Δυσκολία νέου παιχνιδιού</legend>
         <label><input type="radio" name="difficulty" value="easy"><span>Εύκολο</span></label>
