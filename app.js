@@ -60,9 +60,9 @@
  function save(){
   const snapshot={...state,elapsedMs:elapsed(),paused:state.paused};
   storageSet(GAME_KEY,snapshot);
-  $("saveNote").textContent=saveOK?
-   "✓ Αυτόματη αποθήκευση στη συσκευή. Η παρτίδα παραμένει όταν κλείσεις την εφαρμογή.":
-   "⚠️ Η αποθήκευση αποκλείστηκε. Μην κλείσεις την εφαρμογή πριν ελευθερώσεις χώρο.";
+  const notice=$("saveNote");
+  notice.hidden=saveOK;
+  if(!saveOK)notice.textContent="⚠️ Η αποθήκευση αποκλείστηκε. Μην κλείσεις την εφαρμογή πριν ελευθερώσεις χώρο.";
  }
  function formatTime(ms){
   const secs=Math.floor(ms/1000),h=Math.floor(secs/3600),m=Math.floor(secs%3600/60),s=secs%60;
