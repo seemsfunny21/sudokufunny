@@ -66,3 +66,41 @@ input[type=radio],input[type=checkbox]{accent-color:#49a9ff;width:17px;height:17
 .toast{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:20;max-width:calc(100% - 24px);padding:11px 15px;border-radius:12px;border:1px solid #82caff;background:#153962;color:#fff;font-size:12px;font-weight:700;box-shadow:0 10px 25px #0008}
 @media(max-width:360px){.app-shell{padding-left:10px;padding-right:10px}.number-pad{--digit-gap:3px;min-height:40px}.number-pad button{min-height:40px;border-radius:7px}.status-strip{gap:5px}.status-action{font-size:10px}.tool-row{gap:6px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Desktop layout: a large board on the left, a comfortable control desk on the right.
+   Phones and tablets retain the existing compact single-column layout. */
+@media (min-width:960px) {
+ .app-shell{max-width:1120px;padding:18px 26px 24px}
+ .hero{height:112px;margin-bottom:18px}
+ .game-panel{
+  max-width:none;display:grid;
+  grid-template-columns:minmax(0,600px) minmax(280px,1fr);
+  grid-template-rows:repeat(5,min-content);
+  column-gap:30px;row-gap:14px;align-items:start;text-align:center
+ }
+ .board-wrap{
+  grid-column:1;grid-row:1 / span 5;
+  justify-self:center;align-self:start;left:auto;transform:none;
+  width:min(100%,600px,calc(100dvh - 255px))
+ }
+ .status-strip{grid-column:2;grid-row:1;gap:7px;margin:0}
+ .status-block,.status-action{min-height:66px}
+ .status-block strong{font-size:21px}
+ .status-caption,.status-action{font-size:12px}
+ .number-pad{
+  grid-column:2;grid-row:2;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;margin:0;min-height:0
+ }
+ .number-pad button{
+  flex:none;width:100%;height:auto;min-height:62px;
+  font-size:26px;border-radius:13px
+ }
+ .tool-row{grid-column:2;grid-row:3;gap:9px}
+ .tool-btn{min-height:64px;font-size:12px}
+ .secondary-row{grid-column:2;grid-row:4;margin:0}
+ .secondary-row .btn{min-height:53px;font-size:15px}
+ .save-note{grid-column:2;grid-row:5}
+ .sudoku-cell{font-size:clamp(24px,2.1vw,36px)}
+ .sudoku-cell .cell-notes{font-size:clamp(10px,1vw,14px)}
+}
