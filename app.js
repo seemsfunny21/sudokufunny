@@ -120,6 +120,20 @@
   $("undoButton").disabled=state.paused||state.completed||!state.history.length;
   $("eraseButton").disabled=state.paused||state.completed;
   $("notesButton").disabled=state.paused||state.completed;
+  // A digit is complete only after all nine of its positions are correct.
+  // Keep the nine keypad slots in place so the remaining buttons never move.
+  const correctCounts=Array(10).fill(0);
+  for(let i=0;i<81;i++){
+   const value=state.values[i];
+   if(value&&value===state.solution[i])correctCounts[value]++;
+  }
+  for(const button of $("numberPad").querySelectorAll("[data-number]")){
+   const digit=Number(button.dataset.number),finished=correctCounts[digit]===9;
+   button.classList.toggle("is-complete",finished);
+   button.disabled=finished;
+   button.setAttribute("aria-label",finished?
+    "Ο αριθμός "+digit+" ολοκληρώθηκε":"Αριθμός "+digit);
+  }
   const selectedValue=state.values[selected];
   for(let i=0;i<81;i++){
    const cell=boardButtons[i],value=state.values[i],isFixed=!!state.puzzle[i];
