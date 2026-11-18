@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" role="img" aria-label="SudokuFunny">
+<defs>
+ <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#06142c"/><stop offset=".5" stop-color="#124783"/><stop offset="1" stop-color="#090d2b"/></linearGradient>
+ <linearGradient id="ink" x1="0" x2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#98ddff"/></linearGradient>
+ <radialGradient id="halo"><stop stop-color="#35b6ff" stop-opacity=".36"/><stop offset="1" stop-color="#1787fb" stop-opacity="0"/></radialGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<rect width="900" height="300" rx="24" fill="url(#bg)"/>
+<ellipse cx="580" cy="120" rx="410" ry="225" fill="url(#halo)"/>
+<g opacity=".23" stroke="#66caff"><path d="M0 40Q230-10 390 25M0 275Q350 195 670 262M670 0Q830 95 900 50" fill="none" stroke-width="4"/></g>
+<circle cx="118" cy="55" r="6" fill="#81d8ff"/><circle cx="780" cy="255" r="4" fill="#bba9ff"/><circle cx="880" cy="73" r="3" fill="#8fdbff"/>
+<text x="62" y="136" font-family="Arial,DejaVu Sans,sans-serif" font-size="81" font-weight="800" fill="url(#ink)">Sudoku</text>
+<text x="62" y="212" font-family="Arial,DejaVu Sans,sans-serif" font-size="81" font-weight="800" fill="#78d5ff">Funny</text>
+<text x="65" y="255" font-family="Arial,DejaVu Sans,sans-serif" font-size="19" fill="#d5ecff" letter-spacing="2">ΠΑΙΞΕ · ΣΚΕΨΟΥ · ΣΥΝΕΧΙΣΕ</text>
+<g transform="translate(570 36)">
+<rect width="224" height="224" rx="18" fill="#071b3d" stroke="#6acbff" stroke-width="5"/>
+<path d="M74 5V219M149 5V219M5 74H219M5 149H219" stroke="#69bfff" opacity=".8" stroke-width="3"/>
+<path d="M26 26H198M26 51H198M26 100H198M26 124H198M26 174H198M26 198H198M26 26V198M50 26V198M99 26V198M125 26V198M174 26V198M198 26V198" stroke="#65b0ee" opacity=".29" stroke-width="1.5"/>
+<g font-family="Arial,DejaVu Sans,sans-serif" text-anchor="middle" font-size="31" font-weight="800">
+<text x="38" y="59" fill="#c7e8ff">9</text><text x="111" y="58" fill="#9ee7ff">4</text><text x="186" y="59" fill="#ffffff">2</text>
+<text x="37" y="131" fill="#7fc4ff">5</text><text x="112" y="131" fill="#ffffff">7</text><text x="186" y="132" fill="#9ee7ff">1</text>
+<text x="38" y="206" fill="#ffffff">3</text><text x="112" y="206" fill="#a0eaff">8</text><text x="186" y="205" fill="#d7ebff">6</text>
+</g>
+<rect x="77" y="80" width="69" height="67" rx="8" stroke="#7cecff" stroke-width="3" fill="none" opacity=".7"/>
+</g>
+</svg>
