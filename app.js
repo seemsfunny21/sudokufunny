@@ -213,6 +213,25 @@
   $("settingsDialog").showModal();
  }
  function closeSettings(){if($("settingsDialog").open)$("settingsDialog").close()}
+function refreshFullscreenButton(){
+ const active=Boolean(document.fullscreenElement);
+ const btn=$("fullscreenButton");
+ btn.setAttribute("aria-pressed",String(active));
+ btn.setAttribute("aria-label",active?"Έξοδος από πλήρη οθόνη":"Πλήρης οθόνη");
+ $("fullscreenLabel").textContent=active?"Έξοδος από πλήρη οθόνη":"Πλήρης οθόνη";
+}
+async function toggleFullscreen(){
+ try{
+  if(document.fullscreenElement)await document.exitFullscreen();
+  else{
+   if(typeof document.documentElement.requestFullscreen!=="function")throw Error("Unsupported");
+   await document.documentElement.requestFullscreen();
+  }
+ }catch{
+  toast("Δεν επιτρέπεται η πλήρης οθόνη εδώ. Δοκίμασε το F11.");
+ }
+ refreshFullscreenButton();
+}
  makeCells();render();save();
  $("numberPad").addEventListener("click",event=>{
   const button=event.target.closest("[data-number]");
@@ -228,6 +247,10 @@
  $("resumeButton").addEventListener("click",()=>state.completed?newGame():resume());
  $("newButton").addEventListener("click",()=>{pauseGame();newGame()});
  $("settingsButton").addEventListener("click",showSettings);
+$("fullscreenButton").addEventListener("click",toggleFullscreen);
+document.addEventListener("fullscreenchange",refreshFullscreenButton);
+document.addEventListener("fullscreenerror",()=>toast("Η πλήρης οθόνη δεν επιτρέπεται από τον browser."));
+refreshFullscreenButton();
  $("closeSettings").addEventListener("click",closeSettings);
  $("settingsForm").addEventListener("submit",event=>{
   event.preventDefault();
