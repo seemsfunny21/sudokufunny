@@ -11,13 +11,15 @@ new vm.Script(sw,{filename:'sw.js'});
 const levels=Object.keys(Engine.LEVELS);
 assert.deepEqual(levels,['easy','medium','hard','expert']);
 assert.equal((html.match(/type="radio" name="difficulty"/g)||[]).length,4);
+assert.ok(html.includes('id="statsWins"')&&html.includes('id="statsLosses"'),'Sudoku settings display win and abandonment totals');
+assert.ok(js.includes('sudokufunny.stats.v1')&&js.includes('recordResult("wins")')&&js.includes('recordResult("losses")'),'Stats only change on a win or confirmed abandonment');
 assert.ok(js.includes('pagehide')&&js.includes('visibilitychange')&&js.includes('sudokufunny:visibility'),'Pause when hidden or another Applications tab selected');
 assert.ok(!html.includes('class="game-heading"'),'No second page title wastes puzzle space');
 assert.ok(html.includes('id="pauseButton" class="status-action"'),'Pause is in compact status row');
 assert.ok(html.includes('id="settingsButton" class="status-action"'),'Settings is in compact status row');
 assert.ok(fsRead('style.css').includes('width:min(calc(100% + 12px),480px)'),'Board can take available extra width');
-assert.ok(html.includes('style.css?v=8')&&sw.includes('style.css?v=8')&&
- html.includes('app.js?v=6')&&sw.includes('app.js?v=6'),'Latest app and CSS cached consistently');
+assert.ok(html.includes('style.css?v=9')&&sw.includes('style.css?v=9')&&
+ html.includes('app.js?v=7')&&sw.includes('app.js?v=7'),'Latest app and CSS cached consistently');
 assert.ok(fsRead('style.css').includes('@media (min-width:960px)'),'Desktop-only layout preserves phone view');
 assert.ok(html.includes('id="fullscreenButton"')&&js.includes('requestFullscreen'),'Native fullscreen button must be wired');
 assert.ok(fsRead('style.css').includes('html:fullscreen .hero{display:none}'),'Full screen hides banner');
