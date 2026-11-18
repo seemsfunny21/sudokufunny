@@ -42,24 +42,20 @@ const {chromium}=require('playwright');
   assert.equal(await page.locator('#pauseOverlay').isVisible(),true,'Reload starts paused');
   // Finish all nine correct copies of a digit. The pad key disappears, but the
   // remaining keys retain their positions. Undo restores the key immediately.
-  const lastDigitOne=await page.evaluate(()=>{
-    const key='sudokufunny.game.v1';
-    const game=JSON.parse(localStorage.getItem(key));
-    const positions=game.solution.flatMap((value,i)=>value===1?[i]:[]);
-    const missing=positions.filter(i=>!game.puzzle[i]);
-    if(!missing.length)throw Error('Expected a fillable position for digit 1');
-    const last=missing.at(-1);
-    for(const i of positions)if(i!==last)game.values[i]=1;
-    game.history=[];
-    localStorage.setItem(key,JSON.stringify(game));
-    return last;
+  const missingOnes=await page.evaluate(()=>{
+    const game=JSON.parse(localStorage.getItem('sudokufunny.game.v1'));
+    return game.solution.flatMap((v,i)=>v===1&&!game.puzzle[i]?[i]:[]);
   });
-  await page.reload({waitUntil:'domcontentloaded'});
-  assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),true,
-    'Digit stays available until nine correct copies are filled');
+  assert.ok(missingOnes.length>0,'A digit has blank cells to fill');
   const otherKey=await page.locator('#numberPad [data-number="2"]').boundingBox();
   await page.locator('#pauseButton').click();
-  await page.locator('#board button').nth(lastDigitOne).click();
+  for(const index of missingOnes.slice(0,-1)){
+    await page.locator('#board button').nth(index).click();
+    await page.locator('#numberPad [data-number="1"]').click();
+  }
+  assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),true,
+    'Digit stays visible before its ninth correct occurrence');
+  await page.locator('#board button').nth(missingOnes.at(-1)).click();
   await page.locator('#numberPad [data-number="1"]').click();
   const completedInfo=await page.evaluate(()=>{
     const data=JSON.parse(localStorage.getItem('sudokufunny.game.v1'));
@@ -68,7 +64,7 @@ const {chromium}=require('playwright');
     return {count,disabled:btn.disabled,css:getComputedStyle(btn).visibility,
       className:btn.className};
   });
-  console.log('Completed digit details:',JSON.stringify(completedInfo));
+  assert.equal(completedInfo.count,9,'All nine ones are correctly placed');
   assert.equal(await page.locator('#numberPad [data-number="1"]').isVisible(),false,
     'Completed digit disappears: '+JSON.stringify(completedInfo));
   assert.equal(await page.locator('#numberPad [data-number="1"]').isDisabled(),true,
