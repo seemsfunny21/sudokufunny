@@ -225,8 +225,8 @@
   state.values[prior.i]=prior.value;state.notes[prior.i]=prior.note;
   selected=prior.i;save();render();
  }
- function newGame(){
-  if(!state.completed&&!window.confirm("Να ξεκινήσει νέα παρτίδα; Η τρέχουσα θα αντικατασταθεί."))return;
+ async function newGame(){
+  if(!state.completed&&!await GameDialog.confirm("Να ξεκινήσει νέα παρτίδα; Η τρέχουσα θα αντικατασταθεί."))return;
   // A paused game is still active. Count an abandonment only when the player
   // explicitly confirms replacing a puzzle where they have made moves.
   if(!state.completed&&state.history.length>0)recordResult("losses");
