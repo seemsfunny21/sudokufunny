@@ -1,7 +1,7 @@
 /* SudokuFunny isolated cache; other applications on this GitHub Pages origin are untouched. */
 const PREFIX="sudokufunny-shell-";
-const CACHE=PREFIX+"v10-game-dialogs";
-const FILES=["./","./index.html","./style.css?v=9","./sudoku-engine.js?v=1",
+const CACHE=PREFIX+"v11-banner-alignment";
+const FILES=["./","./index.html","./style.css?v=10","./sudoku-engine.js?v=1",
  "./app.js?v=8","./hero-banner.svg","./icon.svg","./manifest.webmanifest"];
 self.addEventListener("install",event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
