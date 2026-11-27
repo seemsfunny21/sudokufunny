@@ -18,8 +18,12 @@ assert.ok(!html.includes('class="game-heading"'),'No second page title wastes pu
 assert.ok(html.includes('id="pauseButton" class="status-action"'),'Pause is in compact status row');
 assert.ok(html.includes('id="settingsButton" class="status-action"'),'Settings is in compact status row');
 assert.ok(fsRead('style.css').includes('width:min(calc(100% + 12px),480px)'),'Board can take available extra width');
-assert.ok(html.includes('style.css?v=9')&&sw.includes('style.css?v=9')&&
- html.includes('app.js?v=7')&&sw.includes('app.js?v=7'),'Latest app and CSS cached consistently');
+for(const asset of ['style.css','app.js','sudoku-engine.js']){
+ const matches=[...html.matchAll(/(?:href|src)="\.\/([^"]+)"/g)].map(m=>m[1]).filter(x=>x.startsWith(asset+'?v='));
+ assert.equal(matches.length,1,asset+' has exactly one versioned HTML reference');
+ assert.match(matches[0],/\?v=\d+$/);
+ assert.ok(sw.includes('"./'+matches[0]+'"'),asset+' cached with its current HTML version');
+}
 assert.ok(fsRead('style.css').includes('@media (min-width:960px)'),'Desktop-only layout preserves phone view');
 assert.ok(html.includes('id="fullscreenButton"')&&js.includes('requestFullscreen'),'Native fullscreen button must be wired');
 assert.ok(fsRead('style.css').includes('html:fullscreen .hero{display:none}'),'Full screen hides banner');
